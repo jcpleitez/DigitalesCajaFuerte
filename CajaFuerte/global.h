@@ -5,9 +5,8 @@ RFIDController rfidContol;
 #include "KeyPadController.h"
 KeyPadController keypadControl;
 
-#include <Adafruit_Fingerprint.h>
-SoftwareSerial mySerial(2, 3);
-Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
+#include "FingerPrintController.h"
+FingerPrintController fingerController;
 
 #include "Solenoid.h"
 #define pinSolenoid A2
