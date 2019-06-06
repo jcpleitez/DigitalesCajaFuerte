@@ -4,6 +4,7 @@ Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
 
 class FingerPrintController {
   private:
+    boolean active = false;
     int mainId = 1;
     int tempId = 0;
   public:
@@ -110,18 +111,20 @@ class FingerPrintController {
     }
 
     boolean validFinger() {
-      if (tempId == mainId) {
-        return true;
-      }
-      return false;
+      return active;
     }
 
     void resetTemFinger() {
+      active = false;
       tempId = 0;
     }
 
     void FingerLoop() {
-      tempId = getFingerprintIDez();      
+      tempId = getFingerprintIDez();
+      if(tempId == mainId){
+        active = true;
+      }
+            
     }
 
 

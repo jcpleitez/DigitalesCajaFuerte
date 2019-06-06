@@ -39,4 +39,8 @@ class KeyPadController {
       tempPin = "\0\0\0\0";
     }
 
+    String getTempPin(){
+      return tempPin;
+    }
+
 };

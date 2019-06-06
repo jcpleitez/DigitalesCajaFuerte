@@ -5,6 +5,9 @@ RFIDController rfidContol;
 #include "KeyPadController.h"
 KeyPadController keypadControl;
 
+#include "LCDController.h"
+LCDController lcdController;
+
 #include "FingerPrintController.h"
 FingerPrintController fingerController;
 
@@ -13,5 +16,5 @@ FingerPrintController fingerController;
 Solenoid solenoid(pinSolenoid);
 
 #include "LlaveMaestra.h"
-#define pinMKey 1
+#define pinMKey 0
 MasterKey masterKey(pinMKey);
