@@ -1,6 +1,15 @@
 void RegistrarPersona() {
-  String pinPersona = "";
+  //Definir su ID
+  int position = SeleccionarID("2-AgregarPersona", "Defina su ID");
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("2-AgregarPersona");
+  lcd.setCursor(0, 1);
+  lcd.print("...OK");
+  delay(500);
+
   //Capturar su Pin
+  String pinPersona = "";
   keypadControl.resetPin();
   while (keypadControl.getKey() != 'C') {
     keypadControl.keyPadLoop();
@@ -52,23 +61,42 @@ void RegistrarPersona() {
   lcd.print("...OK");
   delay(500);
   //Capturar Huella
-  int id = -1;
-  int fingerCounter = EEPROM.read(0);
-  if (fingerCounter == 0) {
-    fingerCounter = 2;
+  int fingerId = -1;
+  while (fingerId == -1) {
+    fingerId = fingerController.getFingerprintEnroll(position);
   }
-  while (id == -1) {
-    id = fingerController.getFingerprintEnroll(fingerCounter);
-  }
-  if (id == -1) {
+  if (fingerId == -1) {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("2-AgregarPersona");
     lcd.setCursor(0, 1);
     lcd.print("Error Registrando");
-    delay(1500);
+    delay(2000);
     return;
   }
-  savePersona(fingerCounter, personaCard, pinPersona);
+  
+  savePersona(position, personaCard, pinPersona);
 
+}
+
+int SeleccionarID(String m1, String m2) {
+  int select = -1;
+  while (select == -1) {
+    char c = keypad.getKey();
+    if (c == 'C') {
+      return -1;
+    } else if (isdigit(c)) {
+      String cadena = "";
+      cadena += c;
+      return cadena.toInt();
+    }
+
+    if (millis() % 1000 == 0) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print(m1);
+      lcd.setCursor(0, 1);
+      lcd.print(m2);
+    }
+  }
 }

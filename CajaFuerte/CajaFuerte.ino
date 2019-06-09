@@ -23,6 +23,13 @@ void loop() {
       LDC_CANCEL();
     }
     RootClean();
+  } else if (keypadControl.getKey() == 'B') {
+    if (RootLogIn()) {
+      borrarPersona(SeleccionarID("BorrarPersona", "Ingrese ID"));
+    } else {
+      LDC_CANCEL();
+    }
+    RootClean();
   }
 
   lcdController.show(keypadControl.getTempPin());
