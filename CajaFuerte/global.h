@@ -8,6 +8,7 @@ RFIDController rfidContol;
 #include "KeyPadController.h"
 KeyPadController keypadControl;
 
+#include <EEPROM.h>
 #include "FingerPrintController.h"
 FingerPrintController fingerController;
 

@@ -16,7 +16,7 @@ class RFIDController {
       SPI.begin();           // MFRC522 Hardware uses SPI protocol
       rfid.PCD_Init();    // Initialize MFRC522 Hardware
       //If you set Antenna Gain to Max it will increase reading distance
-      rfid.PCD_SetAntennaGain(rfid.RxGain_max);
+      //rfid.PCD_SetAntennaGain(rfid.RxGain_max);
     }
 
     boolean validCard() {
@@ -35,6 +35,10 @@ class RFIDController {
         }
       }
       return true;
+    }
+
+    byte getTempCard(uint8_t index) {
+      return tempCard[index];
     }
 
     uint8_t getID() {

@@ -11,7 +11,11 @@ boolean RootLogIn() {
       lcd.setCursor(0, 0);
       lcd.print("1-Administrador");
       lcd.setCursor(0, 1);
-      lcd.print("Pin Principal");
+      if (keypadControl.getTempPin().length() > 0) {
+        lcd.print(keypadControl.getTempPin());
+      } else {
+        lcd.print("Ingrese Pin");
+      }
     }
   }
   LDC_OK("1-Administrador");
@@ -70,17 +74,4 @@ void RootClean() {
   rfidContol.resetCard();
   keypadControl.resetPin();
   fingerController.resetTemFinger();
-}
-
-void RegistrarPersona() {
-  //Registrar su Pin
-  while (keypad.getKey() != 'C') {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("2-AgregarPersona");
-    lcd.setCursor(0, 1);
-    lcd.print("Ingrese Huella");
-    delay(500);
-    break;
-  }
 }
