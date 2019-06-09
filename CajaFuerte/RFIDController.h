@@ -39,7 +39,7 @@ class RFIDController {
       for ( uint8_t i = 0; i < 4; i++) {  //
         tempCard[i] = rfid.uid.uidByte[i];        
       }
-      
+      lcdController.atachNotifi("Card....OK", 2);
       rfid.PICC_HaltA(); // Stop reading
       return 1;
     }

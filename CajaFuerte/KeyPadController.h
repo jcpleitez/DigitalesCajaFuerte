@@ -14,16 +14,20 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 class KeyPadController {
   private:
+    char key = '\0';
     String keyPadPin = "1234";
     String tempPin = "\0\0\0\0";
   public:
 
     void keyPadLoop() {
-      char key = keypad.getKey();
+      key = keypad.getKey();
 
       if (isdigit(key)) {
         if (tempPin.length() < 4) {
           tempPin += key;
+          if (keyPadPin == tempPin) {
+            lcdController.atachNotifi("Pin....OK", 2);
+          }
         }
       } else if (key == '*') {
         resetPin();
@@ -39,8 +43,12 @@ class KeyPadController {
       tempPin = "\0\0\0\0";
     }
 
-    String getTempPin(){
+    String getTempPin() {
       return tempPin;
+    }
+
+    char getKey(){
+      return key;
     }
 
 };

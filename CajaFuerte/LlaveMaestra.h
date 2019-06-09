@@ -13,6 +13,7 @@ class MasterKey{
 
     boolean status(){
       if(digitalRead(_pinMasterKey) == LOW && enable == false){
+        lcdController.atachNotifi("LlaveMaestra..OK", 2);
         enable = true;
         return true;
       }
@@ -21,7 +22,7 @@ class MasterKey{
 
     void MKLoop(){
       if(digitalRead(_pinMasterKey) == HIGH){
-        enable = false;
+        enable = false;        
       }
     }
 };

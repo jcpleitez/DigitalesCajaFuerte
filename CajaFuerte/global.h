@@ -1,12 +1,12 @@
+#include "LCDController.h"
+LCDController lcdController;
+
 #include <SPI.h>
 #include "RFIDController.h"
 RFIDController rfidContol;
 
 #include "KeyPadController.h"
 KeyPadController keypadControl;
-
-#include "LCDController.h"
-LCDController lcdController;
 
 #include "FingerPrintController.h"
 FingerPrintController fingerController;
@@ -18,3 +18,5 @@ Solenoid solenoid(pinSolenoid);
 #include "LlaveMaestra.h"
 #define pinMKey 0
 MasterKey masterKey(pinMKey);
+
+boolean isRoot = false;

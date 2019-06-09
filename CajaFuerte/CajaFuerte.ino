@@ -16,15 +16,23 @@ void loop() {
   boolean validFinger = fingerController.validFinger();
   boolean validMasterKey = masterKey.status();
 
-  lcdController.show(keypadControl.getTempPin());
+  Serial.print("validPin=");
+  Serial.print(validPin);
+  Serial.print(" validCard=");
+  Serial.print(validCard);
+  Serial.print(" validFinger=");
+  Serial.print(validFinger);
+  Serial.println();
+  
 
+  lcdController.show(keypadControl.getTempPin());  
    
   if(validPin && validCard && validFinger){
-    lcdController.atachNotifi("Abriendo Caja", 2);
     rfidContol.resetCard();    
     keypadControl.resetPin();
     fingerController.resetTemFinger();
     solenoid.active(SOLENOIDTIMEOUT);
+    lcdController.atachNotifi("Abriendo Caja", 3);
   }else if(validMasterKey){
     solenoid.active(SOLENOIDTIMEOUT);
   }
@@ -34,6 +42,6 @@ void loop() {
   masterKey.MKLoop();
   fingerController.FingerLoop();
   solenoid.solenoidLoop();
-  lcdController.LCDLoop();
+  lcdController.LCDLoop("  Caja Fuerte");
 
 }

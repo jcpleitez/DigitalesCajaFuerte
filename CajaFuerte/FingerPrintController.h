@@ -4,7 +4,7 @@ Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
 
 class FingerPrintController {
   private:
-    boolean active = false;
+    boolean active = false;    
     int mainId = 1;
     int tempId = 0;
   public:
@@ -122,6 +122,7 @@ class FingerPrintController {
     void FingerLoop() {
       tempId = getFingerprintIDez();
       if(tempId == mainId){
+        lcdController.atachNotifi("Huella..OK", 2);
         active = true;
       }
             

@@ -18,20 +18,20 @@ class LCDController {
       lcd.init();
       //Encender la luz de fondo.
       lcd.backlight();
-      lcd.setCursor(0, 0);      
+      lcd.setCursor(0, 0);
     }
 
-    void LCDLoop() {
+    void LCDLoop(String mainText) {
       if (millis() - screenTime > 500) {
         screenTime = millis();
         lcd.clear();
         lcd.setCursor(0, 0);
-        lcd.print("Caja Fuerte");
-        lcd.setCursor(0, 1);        
-        if (notificationTime > millis() && notification.length() > 0) {
-          lcd.print(notification);
-          notification = "";
+        lcd.print(mainText);
+        lcd.setCursor(0, 1);
+        if (notificationTime > millis()) {
+          lcd.print(notification);          
         } else {
+          notification = "";
           lcd.print(message);
         }
       }
@@ -42,8 +42,10 @@ class LCDController {
     }
 
     void atachNotifi(String noti, uint8_t t) {
-      notificationTime = millis() + (t * 1000);
-      notification = noti;
+      if (noti.length() > 0) {
+        notificationTime = millis() + (t * 1000);
+        notification = noti;
+      }
     }
 
 
