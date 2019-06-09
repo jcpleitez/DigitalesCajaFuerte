@@ -2,7 +2,7 @@
 
 void setup() {
   Serial.begin(9600);
-  solenoid.begin();  
+  solenoid.begin();
   masterKey.begin();
   rfidContol.begin();
   lcdController.begin();
@@ -10,35 +10,35 @@ void setup() {
 }
 
 void loop() {
- 
+
   boolean validPin = keypadControl.validPin();
   boolean validCard = rfidContol.validCard();
   boolean validFinger = fingerController.validFinger();
   boolean validMasterKey = masterKey.status();
 
-  Serial.print("validPin=");
-  Serial.print(validPin);
-  Serial.print(" validCard=");
-  Serial.print(validCard);
-  Serial.print(" validFinger=");
-  Serial.print(validFinger);
-  Serial.println();
-  
+  if (keypadControl.getKey() == 'A') {
+    if (RootLogIn()) {
+      RegistrarPersona();
+    } else {
+      LDC_CANCEL();
+    }
+    RootClean();
+  }
 
-  lcdController.show(keypadControl.getTempPin());  
-   
-  if(validPin && validCard && validFinger){
-    rfidContol.resetCard();    
+  lcdController.show(keypadControl.getTempPin());
+
+  if (validPin && validCard && validFinger) {
+    rfidContol.resetCard();
     keypadControl.resetPin();
     fingerController.resetTemFinger();
     solenoid.active(SOLENOIDTIMEOUT);
     lcdController.atachNotifi("Abriendo Caja", 3);
-  }else if(validMasterKey){
+  } else if (validMasterKey) {
     solenoid.active(SOLENOIDTIMEOUT);
   }
 
   rfidContol.RIFDLoop();
-  keypadControl.keyPadLoop();  
+  keypadControl.keyPadLoop();
   masterKey.MKLoop();
   fingerController.FingerLoop();
   solenoid.solenoidLoop();

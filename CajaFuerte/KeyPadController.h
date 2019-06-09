@@ -39,7 +39,12 @@ class KeyPadController {
       return keyPadPin == tempPin;
     }
 
+    boolean isRootPin(){
+      return keyPadPin == tempPin;
+    }
+
     void resetPin() {
+      key = '\0';
       tempPin = "\0\0\0\0";
     }
 

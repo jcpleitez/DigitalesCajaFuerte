@@ -24,12 +24,21 @@ class RFIDController {
         if ( masterCard[k] != tempCard[k] ) {
           return false;
         }
-      }      
+      }
+      return true;
+    }
+
+    boolean isRootCard() {
+      for (uint8_t k = 0; k < 4; k++) {
+        if ( masterCard[k] != tempCard[k] ) {
+          return false;
+        }
+      }
       return true;
     }
 
     uint8_t getID() {
-      if ( ! rfid.PICC_IsNewCardPresent()) { //If a new PICC placed to RFID reader continue        
+      if ( ! rfid.PICC_IsNewCardPresent()) { //If a new PICC placed to RFID reader continue
         return 0;
       }
       if ( ! rfid.PICC_ReadCardSerial()) {   //Since a PICC placed get Serial and continue
@@ -37,7 +46,7 @@ class RFIDController {
       }
 
       for ( uint8_t i = 0; i < 4; i++) {  //
-        tempCard[i] = rfid.uid.uidByte[i];        
+        tempCard[i] = rfid.uid.uidByte[i];
       }
       lcdController.atachNotifi("Card....OK", 2);
       rfid.PICC_HaltA(); // Stop reading
@@ -50,7 +59,7 @@ class RFIDController {
       }
     }
 
-    void RIFDLoop(){
+    void RIFDLoop() {
       getID();
     }
 

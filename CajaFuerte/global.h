@@ -20,3 +20,4 @@ Solenoid solenoid(pinSolenoid);
 MasterKey masterKey(pinMKey);
 
 boolean isRoot = false;
+unsigned long suTimer = 0;
