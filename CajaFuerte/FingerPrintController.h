@@ -27,6 +27,10 @@ class FingerPrintController {
       Serial.print("Sensor contains "); Serial.print(finger.templateCount); Serial.println(" templates");
     }
 
+    int getRootID(){
+      return mainId;
+    }
+
     uint8_t getFingerprintID() {
       uint8_t p = finger.getImage();
       switch (p) {
@@ -275,7 +279,7 @@ class FingerPrintController {
         lcd.setCursor(0, 0);
         lcd.print("2-AgregarPersona");
         lcd.setCursor(0, 1);
-        lcd.print("...OK");        
+        lcd.print("...OK");
         Serial.println(F("Stored!"));
       } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
         Serial.println(F("Communication error"));
@@ -288,6 +292,28 @@ class FingerPrintController {
         return p;
       } else {
         Serial.println(F("Unknown error"));
+        return p;
+      }
+    }
+
+    uint8_t deleteFingerprint(uint8_t id) {
+      uint8_t p = -1;
+
+      p = finger.deleteModel(id);
+
+      if (p == FINGERPRINT_OK) {
+        Serial.println(F("Deleted!"));
+      } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
+        Serial.println(F("Communication error"));
+        return p;
+      } else if (p == FINGERPRINT_BADLOCATION) {
+        Serial.println(F("Could not delete in that location"));
+        return p;
+      } else if (p == FINGERPRINT_FLASHERR) {
+        Serial.println(F("Error writing to flash"));
+        return p;
+      } else {
+        Serial.print(F("Unknown error: 0x")); Serial.println(p, HEX);
         return p;
       }
     }

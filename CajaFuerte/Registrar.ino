@@ -54,29 +54,21 @@ void RegistrarPersona() {
   //Capturar Huella
   int id = -1;
   int fingerCounter = EEPROM.read(0);
+  if (fingerCounter == 0) {
+    fingerCounter = 2;
+  }
   while (id == -1) {
     id = fingerController.getFingerprintEnroll(fingerCounter);
   }
   if (id == -1) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("2-AgregarPersona");
+    lcd.setCursor(0, 1);
+    lcd.print("Error Registrando");
+    delay(1500);
     return;
   }
-  fingerCounter++;
-  Serial.print("fingerCounter=");
-  Serial.print(fingerCounter);
-  Serial.println();
-  EEPROM.write(0, fingerCounter);
+  savePersona(fingerCounter, personaCard, pinPersona);
 
-  savePersona(fingerCounter, personaCard, pinPersona, id);
-
-
-
-}
-
-void savePersona(int counterEEPROM, byte rfidKey[], String pin, int idHuella) {
-  //uint8_t end = counterEEPROM * 6;
-  //uint8_t start = end - 6;
-
-  //for ( uint8_t j = start; j <= end; j++ ) {   // Loop 4 times
-    //EEPROM.write( start + j, a[j] );  // Write the array values to EEPROM in the right position
-  //}
 }

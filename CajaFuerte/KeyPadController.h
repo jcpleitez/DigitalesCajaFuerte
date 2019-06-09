@@ -15,7 +15,7 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 class KeyPadController {
   private:
     char key = '\0';
-    String keyPadPin = "1234";
+    String keyPadPin = "5555";
     String tempPin = "\0\0\0\0";
   public:
 

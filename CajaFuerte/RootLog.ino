@@ -20,7 +20,7 @@ boolean RootLogIn() {
   }
   LDC_OK("1-Administrador");
   //Verificar Huella
-  while (fingerController.getFingerprintIDez() != 1) {
+  while (fingerController.getFingerprintIDez() != fingerController.getRootID()) {//ID 0 es la de Root
     if (keypad.getKey() == 'C') {
       return false;
     }
