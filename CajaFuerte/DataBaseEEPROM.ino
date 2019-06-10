@@ -2,7 +2,6 @@ void savePersona(int p, byte rfidKey[], String pin) {
   int end = (p * 9);
   int start = end - 9;
   int iteration = 0;
-  String cadena = "";
   for ( int j = start; j < end; j++ ) {
     if (iteration == 0) {
       EEPROM.write( j, p );

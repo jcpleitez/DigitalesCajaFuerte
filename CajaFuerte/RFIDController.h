@@ -7,7 +7,8 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 class RFIDController {
   private:
     byte tempCard[4] = {0x00, 0x00, 0x00, 0x00};
-    byte masterCard[4] = {0xCB, 0x4F, 0x2E, 0x83};
+    byte rootCard[4] = {0x00, 0x00, 0x00, 0x00};
+    byte currentCard[4] = {0x00, 0x00, 0x00, 0x01};
   public:
     RFIDController() {
     }
@@ -17,11 +18,49 @@ class RFIDController {
       rfid.PCD_Init();    // Initialize MFRC522 Hardware
       //If you set Antenna Gain to Max it will increase reading distance
       //rfid.PCD_SetAntennaGain(rfid.RxGain_max);
+
+      loadRootCard();
+    }
+
+    void setCurrentUser(int cU) {
+      int end = (cU * 9);
+      int start = end - 9;
+      int iteration = 0;
+      Serial.print("userKey=");
+      for ( int j = start; j < end; j++ ) {
+        if (iteration == 0) {
+        } else if (iteration <= 4) {
+        } else if (iteration <= 8) {
+          currentCard[iteration - 5] = EEPROM.read(j);
+          Serial.print(currentCard[iteration - 5], HEX);
+        }
+        iteration++;
+      }
+      Serial.println();
+    }
+
+    void loadRootCard() {
+      int end = (1 * 9);
+      int start = end - 9;
+      int iteration = 0;
+      for ( int j = start; j < end; j++ ) {
+        if (iteration == 0) {
+        } else if (iteration <= 4) {
+        } else if (iteration <= 8) {
+          rootCard[iteration - 5] = EEPROM.read(j);
+        }
+        iteration++;
+      }
+      Serial.print("rootCard=");
+      for (int i = 0; i < 4; i++) {
+        Serial.print(rootCard[i], HEX);
+      }
+      Serial.println();
     }
 
     boolean validCard() {
       for (uint8_t k = 0; k < 4; k++) {
-        if ( masterCard[k] != tempCard[k] ) {
+        if ( currentCard[k] != tempCard[k] ) {
           return false;
         }
       }
@@ -30,7 +69,7 @@ class RFIDController {
 
     boolean isRootCard() {
       for (uint8_t k = 0; k < 4; k++) {
-        if ( masterCard[k] != tempCard[k] ) {
+        if ( rootCard[k] != tempCard[k] ) {
           return false;
         }
       }
@@ -52,7 +91,7 @@ class RFIDController {
       for ( uint8_t i = 0; i < 4; i++) {  //
         tempCard[i] = rfid.uid.uidByte[i];
       }
-      lcdController.atachNotifi("Card....OK", 2);
+      lcdController.atachNotifi("Card....Leyendo", 2);
       rfid.PICC_HaltA(); // Stop reading
       return 1;
     }

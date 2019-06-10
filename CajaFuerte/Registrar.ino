@@ -74,7 +74,7 @@ void RegistrarPersona() {
     delay(2000);
     return;
   }
-  
+
   savePersona(position, personaCard, pinPersona);
 
 }
@@ -98,5 +98,50 @@ int SeleccionarID(String m1, String m2) {
       lcd.setCursor(0, 1);
       lcd.print(m2);
     }
+  }
+}
+
+int mainSelectID(String m1, String m2) {
+  int select = -1;
+  while (select == -1) {
+    boolean validMasterKey = masterKey.status();
+    
+    char c = keypad.getKey();
+    if (c == 'C') {
+      return -1;
+    } else if (isdigit(c)) {
+      String cadena = "";
+      cadena += c;
+      return cadena.toInt();
+    } else if (c == 'A') {
+      if (RootLogIn()) {
+        RegistrarPersona();
+      } else {
+        LDC_CANCEL();
+      }
+      RootClean();
+    } else if (c == 'B') {
+      if (RootLogIn()) {
+        borrarPersona(SeleccionarID("Borrar Persona", "Ingrese ID"));
+      } else {
+        LDC_CANCEL();
+      }
+      RootClean();
+    }
+
+    if (millis() % 1000 == 0) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print(m1);
+      lcd.setCursor(0, 1);
+      lcd.print(m2);
+    }
+
+    if (validMasterKey) {      
+      solenoid.active(SOLENOIDTIMEOUT);
+    }
+    
+    masterKey.MKLoop();
+    solenoid.solenoidLoop();
   }
 }

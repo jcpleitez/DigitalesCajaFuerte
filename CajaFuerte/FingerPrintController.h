@@ -6,9 +6,19 @@ class FingerPrintController {
   private:
     boolean active = false;
     int mainId = 1;
+    int currentUser = -1;
     int tempId = 0;
   public:
     FingerPrintController() {
+    }
+
+    void setCurrentUser(int cU){
+      if(cU == -1){
+        currentUser = -2;
+      }else{
+        currentUser = cU;
+      }
+      
     }
 
     void begin() {
@@ -16,18 +26,18 @@ class FingerPrintController {
       finger.begin(57600);
 
       if (finger.verifyPassword()) {
-        Serial.println("Found fingerprint sensor!");
+        Serial.println(F("Found fingerprint sensor!"));
       } else {
-        Serial.println("Did not find fingerprint sensor :(");
+        Serial.println(F("Did not find fingerprint sensor :("));
         while (1) {
           delay(1);
         }
       }
       finger.getTemplateCount();
-      Serial.print("Sensor contains "); Serial.print(finger.templateCount); Serial.println(" templates");
+      Serial.print(F("Sensor contains ")); Serial.print(finger.templateCount); Serial.println(F(" templates"));
     }
 
-    int getRootID(){
+    int getRootID() {
       return mainId;
     }
 
@@ -125,7 +135,7 @@ class FingerPrintController {
 
     void FingerLoop() {
       tempId = getFingerprintIDez();
-      if (tempId == mainId) {
+      if (tempId == currentUser) {
         lcdController.atachNotifi("Huella..OK", 2);
         active = true;
       }

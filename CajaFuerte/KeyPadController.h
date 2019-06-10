@@ -15,7 +15,8 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 class KeyPadController {
   private:
     char key = '\0';
-    String keyPadPin = "5555";
+    String currentPin = "";
+    String rootPin = "";
     String tempPin = "\0\0\0\0";
   public:
 
@@ -25,7 +26,7 @@ class KeyPadController {
       if (isdigit(key)) {
         if (tempPin.length() < 4) {
           tempPin += key;
-          if (keyPadPin == tempPin) {
+          if (currentPin == tempPin) {
             lcdController.atachNotifi("Pin....OK", 2);
           }
         }
@@ -35,12 +36,49 @@ class KeyPadController {
 
     }
 
-    boolean validPin() {
-      return keyPadPin == tempPin;
+    void setCurrentUser(int cU) {
+      currentPin = "";
+      int end = (cU * 9);
+      int start = end - 9;
+      int iteration = 0;
+      for ( int j = start; j < end; j++ ) {
+        if (iteration == 0) {
+        } else if (iteration <= 4) {
+          currentPin += (char) EEPROM.read(j);
+        } else if (iteration <= 8) {
+        }
+        iteration++;
+      }
+      Serial.println(currentPin);
     }
 
-    boolean isRootPin(){
-      return keyPadPin == tempPin;
+    void loadRootPin() {
+      currentPin = "";
+      int end = (1 * 9);
+      int start = end - 9;
+      int iteration = 0;
+      for ( int j = start; j < end; j++ ) {
+        if (iteration == 0) {
+        } else if (iteration <= 4) {
+          rootPin += (char) EEPROM.read(j);
+        } else if (iteration <= 8) {
+        }
+        iteration++;
+      }
+      Serial.print("rootPin=");
+      Serial.println(rootPin);
+    }
+
+    void begin(){
+      loadRootPin();
+    }
+
+    boolean validPin() {
+      return currentPin == tempPin;
+    }
+
+    boolean isRootPin() {
+      return rootPin == tempPin;
     }
 
     void resetPin() {
@@ -52,7 +90,7 @@ class KeyPadController {
       return tempPin;
     }
 
-    char getKey(){
+    char getKey() {
       return key;
     }
 

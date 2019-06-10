@@ -1,3 +1,5 @@
+#include <EEPROM.h>
+
 #include "LCDController.h"
 LCDController lcdController;
 
@@ -5,12 +7,11 @@ LCDController lcdController;
 #include "RFIDController.h"
 RFIDController rfidContol;
 
-#include "KeyPadController.h"
-KeyPadController keypadControl;
-
-#include <EEPROM.h>
 #include "FingerPrintController.h"
 FingerPrintController fingerController;
+
+#include "KeyPadController.h"
+KeyPadController keypadControl;
 
 #include "Solenoid.h"
 #define pinSolenoid A2

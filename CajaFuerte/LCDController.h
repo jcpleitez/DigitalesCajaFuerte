@@ -38,7 +38,11 @@ class LCDController {
     }
 
     void show(String text) {
-      message = text;
+      if(text.length() > 0){
+        message = text;
+      }else{
+        message = "Ingrese PIN";        
+      }
     }
 
     void atachNotifi(String noti, uint8_t t) {

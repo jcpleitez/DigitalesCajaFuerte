@@ -5,50 +5,73 @@ void setup() {
   solenoid.begin();
   masterKey.begin();
   rfidContol.begin();
+  keypadControl.begin();
   lcdController.begin();
   fingerController.begin();
 }
 
 void loop() {
 
-  boolean validPin = keypadControl.validPin();
-  boolean validCard = rfidContol.validCard();
-  boolean validFinger = fingerController.validFinger();
+  int idUsuario = mainSelectID("  Caja Fuerte", "Ingrese su ID");
+  fingerController.setCurrentUser(idUsuario);
+  keypadControl.setCurrentUser(idUsuario);
+  rfidContol.setCurrentUser(idUsuario);
+
   boolean validMasterKey = masterKey.status();
 
-  if (keypadControl.getKey() == 'A') {
-    if (RootLogIn()) {
-      RegistrarPersona();
-    } else {
-      LDC_CANCEL();
+  while (idUsuario != -1) {
+
+    boolean stop = false;
+
+    boolean validPin = keypadControl.validPin();
+    boolean validCard = rfidContol.validCard();
+    boolean validFinger = fingerController.validFinger();    
+
+    if (keypadControl.getKey() == 'C') {
+      stop = true;
     }
-    RootClean();
-  } else if (keypadControl.getKey() == 'B') {
-    if (RootLogIn()) {
-      borrarPersona(SeleccionarID("BorrarPersona", "Ingrese ID"));
-    } else {
-      LDC_CANCEL();
+
+    Serial.print("validPin=");
+    Serial.print(validPin);
+    Serial.print(" validCard=");
+    Serial.print(validCard);
+    Serial.print(" validFinger=");
+    Serial.print(validFinger);
+    Serial.println();
+
+
+    lcdController.show(keypadControl.getTempPin());
+
+    if (validPin && validCard && validFinger) {
+      rfidContol.resetCard();
+      keypadControl.resetPin();
+      fingerController.resetTemFinger();
+      solenoid.active(SOLENOIDTIMEOUT);
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("  Caja Fuerte");
+      lcd.setCursor(0, 1);
+      lcd.print("Abriendo Caja");
+      stop = true;
+    } else if (validMasterKey) {
+      stop = true;
+      solenoid.active(SOLENOIDTIMEOUT);
     }
-    RootClean();
+
+    rfidContol.RIFDLoop();
+    keypadControl.keyPadLoop();    
+    fingerController.FingerLoop();
+    solenoid.solenoidLoop();
+    lcdController.LCDLoop("  Caja Fuerte");
+
+    if (stop) {
+      RootClean();
+      delay(2000);
+      break;
+    }
+
   }
-
-  lcdController.show(keypadControl.getTempPin());
-
-  if (validPin && validCard && validFinger) {
-    rfidContol.resetCard();
-    keypadControl.resetPin();
-    fingerController.resetTemFinger();
-    solenoid.active(SOLENOIDTIMEOUT);
-    lcdController.atachNotifi("Abriendo Caja", 3);
-  } else if (validMasterKey) {
-    solenoid.active(SOLENOIDTIMEOUT);
-  }
-
-  rfidContol.RIFDLoop();
-  keypadControl.keyPadLoop();
   masterKey.MKLoop();
-  fingerController.FingerLoop();
   solenoid.solenoidLoop();
-  lcdController.LCDLoop("  Caja Fuerte");
 
 }
