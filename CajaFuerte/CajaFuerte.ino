@@ -1,6 +1,7 @@
 #include "global.h"
 
 void setup() {
+  pinMode(pinResetRoot, INPUT_PULLUP);
   Serial.begin(9600);
   solenoid.begin();
   masterKey.begin();
@@ -25,7 +26,7 @@ void loop() {
 
     boolean validPin = keypadControl.validPin();
     boolean validCard = rfidContol.validCard();
-    boolean validFinger = fingerController.validFinger();    
+    boolean validFinger = fingerController.validFinger();
 
     if (keypadControl.getKey() == 'C') {
       stop = true;
@@ -59,7 +60,7 @@ void loop() {
     }
 
     rfidContol.RIFDLoop();
-    keypadControl.keyPadLoop();    
+    keypadControl.keyPadLoop();
     fingerController.FingerLoop();
     solenoid.solenoidLoop();
     lcdController.LCDLoop("  Caja Fuerte");
@@ -68,6 +69,10 @@ void loop() {
       RootClean();
       delay(2000);
       break;
+    }
+
+    if (analogRead(pinResetRoot) == 0) {
+      DefineNewRoot();
     }
 
   }

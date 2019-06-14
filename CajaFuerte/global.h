@@ -23,3 +23,7 @@ MasterKey masterKey(pinMKey);
 
 boolean isRoot = false;
 unsigned long suTimer = 0;
+
+#define pinResetRoot A7
+
+void(* resetFunc) (void) = 0;
